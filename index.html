@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulator Boguś</title>
+<style>
+body{font-family:Arial;background:#f3f3f3;padding:20px}
+.box{max-width:700px;margin:auto;background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+label{display:block;margin-top:12px;font-weight:bold}
+input,select,button{width:100%;padding:10px;margin-top:5px;font-size:16px}
+button{background:#333;color:#fff;border:none}
+.result{margin-top:18px;padding:12px;background:#f7f7f7}
+</style></head><body>
+<div class="box">
+<h2>Witold Szabat – Kalkulator sztachet Boguś</h2>
+<label>Rodzaj</label>
+<select id="p"><option value="9.5">Standard</option><option value="8.5">Winchester / Bluszcz</option><option value="10.5">Drewnopodobne</option></select>
+<label>Szerokość ogrodzenia (m)</label><input id="w" type="number" step="0.01">
+<label>Wysokość sztachety (cm)</label>
+<select id="h"><option>80</option><option>100</option><option>120</option><option>140</option><option>150</option><option>160</option><option>170</option><option>180</option><option>190</option><option>200</option><option>220</option><option>250</option></select>
+<label>Odstęp (cm)</label><select id="g"><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<button onclick="c()">Oblicz</button>
+<div class="result">
+<p>Sztachety: <span id="s">0</span></p>
+<p>Wkręty: <span id="k">0</span></p>
+<p>Cena: <span id="t">0,00 zł</span></p>
+</div></div>
+<script>
+function c(){
+let p=parseFloat(document.getElementById('p').value);
+let w=parseFloat(document.getElementById('w').value||0);
+let h=parseFloat(document.getElementById('h').value);
+let g=parseFloat(document.getElementById('g').value);
+let s=Math.ceil((w*100)/(10.5+g));
+let total=s*(h/100)*p;
+document.getElementById('s').textContent=s;
+document.getElementById('k').textContent=s*4;
+document.getElementById('t').textContent=total.toFixed(2)+' zł';
+}
+</script></body></html>
