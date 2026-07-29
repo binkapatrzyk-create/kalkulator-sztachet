@@ -1,38 +1,313 @@
 <!DOCTYPE html>
-<html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kalkulator Boguś</title>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kalkulator sztachet metalowych | Witold Szabat</title>
+
 <style>
-body{font-family:Arial;background:#f3f3f3;padding:20px}
-.box{max-width:700px;margin:auto;background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
-label{display:block;margin-top:12px;font-weight:bold}
-input,select,button{width:100%;padding:10px;margin-top:5px;font-size:16px}
-button{background:#333;color:#fff;border:none}
-.result{margin-top:18px;padding:12px;background:#f7f7f7}
-</style></head><body>
-<div class="box">
-<h2>Witold Szabat – Kalkulator sztachet Boguś</h2>
-<label>Rodzaj</label>
-<select id="p"><option value="9.5">Standard</option><option value="8.5">Winchester / Bluszcz</option><option value="10.5">Drewnopodobne</option></select>
-<label>Szerokość ogrodzenia (m)</label><input id="w" type="number" step="0.01">
-<label>Wysokość sztachety (cm)</label>
-<select id="h"><option>80</option><option>100</option><option>120</option><option>140</option><option>150</option><option>160</option><option>170</option><option>180</option><option>190</option><option>200</option><option>220</option><option>250</option></select>
-<label>Odstęp (cm)</label><select id="g"><option>2</option><option>3</option><option>4</option><option>5</option></select>
-<button onclick="c()">Oblicz</button>
-<div class="result">
-<p>Sztachety: <span id="s">0</span></p>
-<p>Wkręty: <span id="k">0</span></p>
-<p>Cena: <span id="t">0,00 zł</span></p>
-</div></div>
-<script>
-function c(){
-let p=parseFloat(document.getElementById('p').value);
-let w=parseFloat(document.getElementById('w').value||0);
-let h=parseFloat(document.getElementById('h').value);
-let g=parseFloat(document.getElementById('g').value);
-let s=Math.ceil((w*100)/(10.5+g));
-let total=s*(h/100)*p;
-document.getElementById('s').textContent=s;
-document.getElementById('k').textContent=s*4;
-document.getElementById('t').textContent=total.toFixed(2)+' zł';
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
 }
-</script></body></html>
+
+body{
+background:#f4f6f8;
+padding:20px;
+color:#333;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:#fff;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+h1{
+text-align:center;
+color:#2e7d32;
+margin-bottom:8px;
+}
+
+h2{
+text-align:center;
+font-size:18px;
+font-weight:normal;
+color:#666;
+margin-bottom:25px;
+}
+
+.info{
+background:#eef8ef;
+padding:15px;
+border-left:5px solid #2e7d32;
+border-radius:10px;
+margin-bottom:25px;
+line-height:1.6;
+}
+
+label{
+display:block;
+margin-top:18px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+font-size:16px;
+border:1px solid #ccc;
+border-radius:8px;
+}
+
+input:focus,
+select:focus{
+border-color:#2e7d32;
+outline:none;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+background:#2e7d32;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#256628;
+}
+
+#wynik{
+display:none;
+margin-top:30px;
+padding:20px;
+background:#eef8ef;
+border-radius:10px;
+border-left:6px solid #2e7d32;
+}
+
+.razem{
+font-size:30px;
+font-weight:bold;
+color:#2e7d32;
+margin-top:20px;
+}
+
+.przyciski{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-top:30px;
+}
+
+.przyciski a{
+flex:1;
+text-align:center;
+padding:15px;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+color:white;
+}
+
+.sklep{
+background:#2e7d32;
+}
+
+.tel{
+background:#1565c0;
+}
+
+@media(max-width:700px){
+
+.container{
+padding:18px;
+}
+
+.przyciski{
+flex-direction:column;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧮 Kalkulator sztachet metalowych</h1>
+
+<h2>WITOLD SZABAT – Producent sztachet metalowych</h2>
+
+<div class="info">
+
+Oblicz orientacyjny koszt wykonania ogrodzenia.
+Kalkulator uwzględnia koszt sztachet oraz wkrętów.
+
+</div><label>Rodzaj sztachety</label>
+
+<select id="rodzaj">
+    <option value="9.5">Standard – 9,50 zł/mb</option>
+    <option value="8.5">Drewnopodobne jednostronne – 8,50 zł/mb</option>
+    <option value="10.5">Drewnopodobne dwustronne – 10,50 zł/mb</option>
+</select>
+
+<label>Kolor</label>
+
+<select id="kolor">
+    <option>Grafit RAL 7016</option>
+    <option>Czarny RAL 9005</option>
+    <option>Brąz RAL 8017</option>
+    <option>Złoty Dąb</option>
+    <option>Orzech</option>
+    <option>Winchester</option>
+    <option>Bluszcz</option>
+</select>
+
+<label>Wysokość sztachety (cm)</label>
+
+<select id="wysokosc">
+    <option>80</option>
+    <option>100</option>
+    <option>120</option>
+    <option>140</option>
+    <option selected>150</option>
+    <option>160</option>
+    <option>180</option>
+    <option>200</option>
+    <option>220</option>
+    <option>250</option>
+</select>
+
+<label>Szerokość ogrodzenia (m)</label>
+
+<input
+type="number"
+id="szerokosc"
+step="0.01"
+placeholder="Np. 12">
+
+<label>Odstęp między sztachetami (cm)</label>
+
+<input
+type="number"
+id="odstep"
+step="0.1"
+value="2">
+
+<button onclick="oblicz()">
+🧮 Oblicz cenę
+</button>
+
+<div id="wynik"></div>
+
+<div class="przyciski">
+
+<a class="sklep"
+href="https://witoldszabat.pl"
+target="_blank">
+
+🛒 Przejdź do sklepu
+
+</a>
+
+<a class="tel"
+href="tel:+48519190803">
+
+📞 519 190 803
+
+</a>
+
+</div><script>
+
+function oblicz(){
+
+let cena = parseFloat(document.getElementById("rodzaj").value);
+let wysokosc = parseFloat(document.getElementById("wysokosc").value);
+let szerokosc = parseFloat(document.getElementById("szerokosc").value);
+let odstep = parseFloat(document.getElementById("odstep").value);
+let kolor = document.getElementById("kolor").value;
+
+if(isNaN(szerokosc) || szerokosc <= 0){
+    alert("Podaj szerokość ogrodzenia.");
+    return;
+}
+
+const szerokoscSztachety = 10.5;
+
+let iloscSztachet = Math.ceil((szerokosc * 100) / (szerokoscSztachety + odstep));
+
+let metryBiezace = iloscSztachet * (wysokosc / 100);
+
+let kosztSztachet = metryBiezace * cena;
+
+let liczbaWkretow = iloscSztachet * 4;
+
+let opakowania = Math.ceil(liczbaWkretow / 250);
+
+let kosztWkretow = opakowania * 45;
+
+let razem = kosztSztachet + kosztWkretow;
+
+document.getElementById("wynik").style.display = "block";
+
+document.getElementById("wynik").innerHTML = `
+
+<h2>Podsumowanie</h2>
+
+<p><b>Kolor:</b> ${kolor}</p>
+
+<p><b>Liczba sztachet:</b> ${iloscSztachet} szt.</p>
+
+<p><b>Łączna długość sztachet:</b> ${metryBiezace.toFixed(2)} mb</p>
+
+<p><b>Wkręty:</b> ${liczbaWkretow} szt.</p>
+
+<p><b>Opakowania wkrętów:</b> ${opakowania}</p>
+
+<p><b>Koszt sztachet:</b> ${kosztSztachet.toFixed(2)} zł</p>
+
+<p><b>Koszt wkrętów:</b> ${kosztWkretow.toFixed(2)} zł</p>
+
+<hr>
+
+<div class="razem">
+
+Razem: ${razem.toFixed(2)} zł
+
+</div>
+
+<p style="margin-top:15px;font-size:14px;color:#666;">
+
+* Cena orientacyjna. Nie obejmuje słupków, poprzeczek, bram, furtek i pozostałych akcesoriów.
+
+</p>
+
+`;
+
+}
+
+</script>
+</div>
+
+</body>
+
+</html>
